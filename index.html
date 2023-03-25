@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Your Location</title>
+    <style>
+        *{
+    
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+
+        button{
+            width: 300px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 5px;
+            background-color: aquamarine;
+            font-size: 30px;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: 100vh;
+            width: 100%;
+        }
+        #map{
+            height: 60vh;
+            width: 70vw;
+            position: relative;
+            left: 15%;
+        }
+        .groupBtn{
+            position: relative;
+            display: flex;
+            left: 30%;
+            gap: 2vw;
+        }
+        iframe{
+            width: 100%;
+            height: 100%;
+            border: 3px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="groupBtn">
+            <button id="btn" onclick="getLocation()">Get Location</button>
+            <button onclick="removeLocation()">Remove Location</button>
+        </div>
+        <div id="map"></div>
+    </div>
+    
+    <script>
+        let map=document.getElementById('map');
+        let btn=document.getElementById('btn');
+
+        function getLocation(){
+            if(localStorage.getItem("lat")){
+                btn.disabled=true;
+            }
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(showPosition)
+                btn.disabled=true;
+            }else{
+                map.innerText="Sorry to say Geolocation is not supported by your browser";
+            }
+        }
+
+        function showPosition(position){
+            localStorage.setItem("lat",position.coords.latitude);
+            localStorage.setItem("long",position.coords.longitude);
+            map.innerHTML=`<iframe src="https://maps.google.com/maps?q=${position.coords.latitude}, ${position.coords.longitude}&output=embed"></iframe>`;
+        }
+
+        function removeLocation(){
+            btn.disabled=false;
+            localStorage.removeItem("lat")
+            localStorage.removeItem("long")
+        }
+    </script>
+</body>
+</html>
